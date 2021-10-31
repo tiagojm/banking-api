@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIContaBanco", "APIContaBanco\APIContaBanco.csproj", "{B118C192-4E4A-4EFD-A7DF-AC43A8F38B99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B118C192-4E4A-4EFD-A7DF-AC43A8F38B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B118C192-4E4A-4EFD-A7DF-AC43A8F38B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B118C192-4E4A-4EFD-A7DF-AC43A8F38B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B118C192-4E4A-4EFD-A7DF-AC43A8F38B99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8BD70B9-3CF8-46CD-8DC9-8264AE157970}
+	EndGlobalSection
+EndGlobal
