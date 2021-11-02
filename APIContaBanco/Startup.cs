@@ -1,4 +1,6 @@
 using APIContaBanco.Context;
+using APIContaBanco.Models;
+using APIContaBanco.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +30,16 @@ namespace APIContaBanco
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //MySQL configs.
             var connectionString = Configuration.GetConnectionString("MySQLConnection");
             services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+            
+            //MongoDB configs.
+            services.Configure<BankingOperationsMongoSettings>(Configuration.GetSection("MongoSettings"));
+            services.AddSingleton<IBankingOperationsMongoSettings>(s => s.GetRequiredService<IOptions<BankingOperationsMongoSettings>>().Value);
+            //services.AddSingleton<IBankingOperationsMongoSettings, BankingOperationsMongoSettings>();
+            services.AddSingleton<MongoRepository>();
+
             services.AddControllers();
         }
 

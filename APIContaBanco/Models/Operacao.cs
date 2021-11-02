@@ -1,16 +1,18 @@
 ﻿using APIContaBanco.Enums;
 using APIContaBanco.Interface;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace APIContaBanco.Models
 {
     public class Operacao : IOperacao
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public Conta Conta { get; }
-        public long ContaId { get; }
+        [BsonElement("Descricao")]
         public string Descricao { get; set; }
         public DateTime Data { get; }
         public TipoOperacao Tipo { get; }
@@ -23,7 +25,6 @@ namespace APIContaBanco.Models
         {
             this.Conta = ContaOperacao;
             this.Descricao = DescricaoOperacao;
-            this.ContaId = ContaOperacao.Id;
             this.Data = DataOperacao;
             this.Tipo = TipoOperacao;
             this.Valor = Valor;
