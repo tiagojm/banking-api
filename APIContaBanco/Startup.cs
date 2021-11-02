@@ -39,6 +39,7 @@ namespace APIContaBanco
             services.AddSingleton<IBankingOperationsMongoSettings>(s => s.GetRequiredService<IOptions<BankingOperationsMongoSettings>>().Value);
             //services.AddSingleton<IBankingOperationsMongoSettings, BankingOperationsMongoSettings>();
             services.AddSingleton<MongoRepository>();
+            services.AddScoped<IUnityOfWork, UnityOfWork>();
 
             services.AddControllers();
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using APIContaBanco.Repository;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace APIContaBanco.Models
 {
     [Table("Cliente")]
-    public class Cliente
+    public class Cliente : TEntity
     {
         [Key]
         public long Id { get; set; }

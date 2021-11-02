@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace APIContaBanco.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class, TEntity
     {
         private readonly AppDbContext _context;
 
@@ -34,6 +34,12 @@ namespace APIContaBanco.Repository
         public async Task<T> GetByIdAsync(params object[] id)
         {
             return await _context.Set<T>().FindAsync(id);
+        }
+
+        public bool TryGetById(long id, out T entity)
+        {
+            entity = this.GetById(e => e.Id == id);
+            return entity != null ? true : false;
         }
 
         public void Insert(T entity)

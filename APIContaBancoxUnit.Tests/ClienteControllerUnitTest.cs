@@ -1,6 +1,7 @@
 ﻿using APIContaBanco.Context;
 using APIContaBanco.Controllers;
 using APIContaBanco.Models;
+using APIContaBanco.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +13,7 @@ namespace APIContaBancoxUnit.Tests
     public class ClienteControllerUnitTest
     {
         private AppDbContext _context;
+        private IUnityOfWork _uof;
         
         public static DbContextOptions<AppDbContext> dbContextOptions { get; }
         public static string connectionString = "Server=localhost;DataBase=BancoDB_1;Uid=root;Pwd=''";
@@ -26,13 +28,14 @@ namespace APIContaBancoxUnit.Tests
         public ClienteControllerUnitTest()
         {
             _context = new AppDbContext(dbContextOptions);
+            _uof = new UnityOfWork(_context);
         }
 
         [Fact]
         public void GetCliente_Return_OkResult()
         {
             //Arrange -> Preparação
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
 
             //Act -> Execução
             var data = controller.Get().Result;
@@ -46,7 +49,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void GetClienteById_Return_OkResult()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
 
             var data = controller.Get(2).Result;
             var result = data.Result as OkObjectResult;
@@ -58,7 +61,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void GetClienteById_Return_NotFoundResult()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
 
             var data = controller.Get(1).Result;
 
@@ -69,7 +72,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void PostCliente_Return_CreatedResult()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
             var cliente = new Cliente { Nome = "Tiago Medeiros", NomePreferencia = "TiTo", Email = "medeiros.tiago20@gmail.com", FotoPath = "images/clientes/tiago.png" };
 
             var data = controller.Post(cliente).Result;
@@ -80,7 +83,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void PutCliente_Return_BadRequestResult()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
             var cliente = new Cliente { Id = 2, Nome = "Tiago Medeiros", NomePreferencia = "TiTo", Email = "medeiros.tiago25@gmail.com", FotoPath = "images/clientes/tiago.png" };
             var id = 3;
 
@@ -93,7 +96,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void PutCliente_Return_OkResult()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
             var cliente = new Cliente { Id = 2, Nome = "Tiago Medeiros", NomePreferencia = "TiTo", Email = "medeiros.tiago25@gmail.com", FotoPath = "images/clientes/tiago.png" };
             var id = 2L;
 
@@ -106,7 +109,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void DeleteCliente_Return_NotFound()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
             var id = 1L;
 
             var data = controller.Delete(id).Result;
@@ -118,7 +121,7 @@ namespace APIContaBancoxUnit.Tests
         [Fact]
         public void DeleteCliente_Return_OkResult()
         {
-            var controller = new ClienteController(_context);
+            var controller = new ClienteController(_uof);
             var id = 3L;
 
             var data = controller.Delete(id).Result;

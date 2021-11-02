@@ -12,6 +12,7 @@ namespace APIContaBanco.Repository
 
         T GetById(Func<T, bool> predicate);
         Task<T> GetByIdAsync(params object[] id);
+        bool TryGetById(long id, out T entity);
 
         void Insert(T entity);
         Task InsertAsync(T entity);

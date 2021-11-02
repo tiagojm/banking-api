@@ -17,17 +17,17 @@ namespace APIContaBanco.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IUnityOfWork _uof;
 
-        public ClienteController(AppDbContext context)
+        public ClienteController(IUnityOfWork uof)
         {
-            _context = context;
+            _uof = uof;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> Get()
         {
-            var clientes = await _context.Clientes.ToListAsync();
+            var clientes = await _uof.clienteRepository.GetAsync();
 
             return Ok(clientes);
         }
@@ -35,7 +35,7 @@ namespace APIContaBanco.Controllers
         [HttpGet("{id}", Name = "GetCliente")]
         public async Task<ActionResult<Cliente>> Get(long id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _uof.clienteRepository.GetByIdAsync(id);
 
             if (cliente == null)
             {
@@ -48,8 +48,8 @@ namespace APIContaBanco.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Cliente cliente)
         {
-            await _context.Clientes.AddAsync(cliente);
-            await _context.SaveChangesAsync();
+            await _uof.clienteRepository.InsertAsync(cliente);
+            await _uof.CommitAsync();
             return new CreatedAtRouteResult("GetCliente", new { id = cliente.Id}, cliente);
         } 
 
@@ -61,8 +61,8 @@ namespace APIContaBanco.Controllers
                 return BadRequest();
             }
 
-            _context.Clientes.Update(cliente);
-            await _context.SaveChangesAsync();
+            _uof.clienteRepository.Update(cliente);
+            await _uof.CommitAsync();
 
             return NoContent();
         }
@@ -70,15 +70,15 @@ namespace APIContaBanco.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Cliente>> Delete(long id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _uof.clienteRepository.GetByIdAsync(id);
 
             if (cliente == null)
             {
                 return NotFound();
             }
 
-            _context.Clientes.Remove(cliente);
-            await _context.SaveChangesAsync();
+            _uof.clienteRepository.Delete(cliente);
+            await _uof.CommitAsync();
 
             return Ok(cliente);
         }
