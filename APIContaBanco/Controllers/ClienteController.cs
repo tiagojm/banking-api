@@ -25,15 +25,60 @@ namespace APIContaBanco.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> Get()
         {
-            return await _context.Clientes.ToListAsync();
+            var clientes = await _context.Clientes.ToListAsync();
+
+            return Ok(clientes);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> Get(int id)
+        [HttpGet("{id}", Name = "GetCliente")]
+        public async Task<ActionResult<Cliente>> Get(long id)
         {
-            return await _context.Clientes.FindAsync(id);
+            var cliente = await _context.Clientes.FindAsync(id);
+
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(cliente);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] Cliente cliente)
+        {
+            await _context.Clientes.AddAsync(cliente);
+            await _context.SaveChangesAsync();
+            return new CreatedAtRouteResult("GetCliente", new { id = cliente.Id}, cliente);
+        } 
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(long id, [FromBody] Cliente cliente)
+        {
+            if (id != cliente.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Clientes.Update(cliente);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Cliente>> Delete(long id)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            _context.Clientes.Remove(cliente);
+            await _context.SaveChangesAsync();
+
+            return cliente;
+        }
     }
 }
