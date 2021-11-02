@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace APIContaBanco.Controllers
 {
+    [Produces("application/json")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     [Route("api/[controller]")]
     [ApiController]
     public class ClienteController : ControllerBase
@@ -78,7 +80,7 @@ namespace APIContaBanco.Controllers
             _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();
 
-            return cliente;
+            return Ok(cliente);
         }
     }
 }
