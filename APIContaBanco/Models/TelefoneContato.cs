@@ -15,6 +15,7 @@ namespace APIContaBanco.Models
         public Cliente Cliente { get; set; }
         //public long ClienteId { get; set; }
 
+        [Required]
         public TipoTelefone TipoTelefone { get; set; }
 
         [Required]

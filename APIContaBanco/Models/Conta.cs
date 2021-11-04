@@ -15,6 +15,11 @@ namespace APIContaBanco.Models
         [NotMapped]
         public List<Operacao> Operacoes { get; set; }
 
+        public Conta(double saldoInicial)
+        {
+            this.Saldo = saldoInicial;
+        }
+
         public void OperacaoCredito(DateTime DataOperacao, double Valor)
         {
             var operacao = new Operacao(this, "Operação Padrão de Adição de Valor no Saldo", DateTime.Now, TipoOperacao.Credito, Valor, this.Saldo);

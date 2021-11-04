@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using Xunit;
 
@@ -147,13 +148,33 @@ namespace APIContaBancoxUnit.Tests
         public void InsertCliente()
         {
             IRepository<Cliente> repository = new ClienteRepository(_context);
-            var cliente = new Cliente { Nome = "Tiago Medeiros", NomePreferencia = "Salim", Email = "medeiros.tiago20@gmail.com", FotoPath = "images/tiago-2.png" };
+            var cliente = new Cliente 
+            { 
+                Nome = "Tiago Medeiros", 
+                NomePreferencia = "Salim", 
+                Email = "medeiros.tiago20@gmail.com", 
+                FotoPath = "images/tiago-2.png",
+                Endereco = new Endereco 
+                { 
+                    Logradouro = "Av. Brasil", 
+                    Numero = "253", 
+                    Cep = "18190000", 
+                    Cidade = "Araçoiaba da Serra", 
+                    Estado = APIContaBanco.Enums.Estado.SaoPaulo, 
+                    Pais = APIContaBanco.Enums.Pais.Brasil 
+                }
+            };
+
+            cliente.Telefones.Add(new TelefoneContato { Numero = "015999999999", TipoTelefone = APIContaBanco.Enums.TipoTelefone.Celular });
+            cliente.Telefones.Add(new TelefoneContato { Numero = "01532999999", TipoTelefone = APIContaBanco.Enums.TipoTelefone.TelefoneFIxo });
+
+            cliente.Contas.Add(new Conta(0) { TipoConta = new TipoConta { Descricao = "Conta Corrente" } });
 
             repository.Insert(cliente);
         }
 
         [Fact]
-        public void InsertCliente_NotNullValidation()
+        public void InsertCliente_Email_Null()
         {
             IRepository<Cliente> repository = new ClienteRepository(_context);
             var cliente = new Cliente { Nome = "Tiago Medeiros", NomePreferencia = "Salim", FotoPath = "images/tiago-2.png" };
@@ -162,7 +183,7 @@ namespace APIContaBancoxUnit.Tests
         }
 
         [Fact]
-        public void InsertCliente_MaxLengthExceded()
+        public void InsertCliente_Email_MaxLengthExceded()
         {
             IRepository<Cliente> repository = new ClienteRepository(_context);
             var cliente = new Cliente 
@@ -174,6 +195,74 @@ namespace APIContaBancoxUnit.Tests
             };
 
             Assert.Throws<Exception>(() => { repository.Insert(cliente); });
+        }
+
+        [Fact]
+        public void InsertCliente_Telefone_Numero_Null()
+        {
+            IRepository<Cliente> repository = new ClienteRepository(_context);
+            var cliente = new Cliente
+            {
+                Nome = "Tiago Medeiros",
+                NomePreferencia = "Salim",
+                Email = "medeiros.tiago20@gmail.com",
+                FotoPath = "images/tiago-2.png"
+            };
+
+            cliente.Telefones.Add(new TelefoneContato { TipoTelefone = APIContaBanco.Enums.TipoTelefone.Celular });
+
+            Assert.Throws<Exception>(() => { repository.Insert(cliente); });
+        }
+
+        [Fact]
+        public void InsertCliente_Telefone_TipoTelefone_Null()
+        {
+            IRepository<Cliente> repository = new ClienteRepository(_context);
+            var cliente = new Cliente
+            {
+                Nome = "Tiago Medeiros",
+                NomePreferencia = "Salim",
+                Email = "medeiros.tiago20@gmail.com",
+                FotoPath = "images/tiago-2.png",
+                Endereco = new Endereco
+                {
+                    Logradouro = "Av. Brasil",
+                    Numero = "253",
+                    Cep = "18190000",
+                    Cidade = "Araçoiaba da Serra",
+                    Estado = APIContaBanco.Enums.Estado.SaoPaulo,
+                    Pais = APIContaBanco.Enums.Pais.Brasil
+                }
+            };
+
+            cliente.Telefones.Add(new TelefoneContato { Numero = "015999999999" });
+
+            Assert.Throws<Exception>(() => { repository.Insert(cliente); });
+        }
+
+
+        [Fact]
+        public void InsertCliente_Endereco_Logradouro_Null()
+        {
+            IRepository<Cliente> repository = new ClienteRepository(_context);
+            var cliente = new Cliente
+            {
+                Nome = "Tiago Medeiros",
+                NomePreferencia = "Salim",
+                Email = "medeiros.tiago20@gmail.com",
+                FotoPath = "images/tiago-2.png",
+                Endereco = new Endereco
+                {
+                    Logradouro = "Av. Brasil",
+                    Numero = "253",
+                    Cep = "18190000",
+                    Cidade = "Araçoiaba da Serra",
+                    Estado = APIContaBanco.Enums.Estado.SaoPaulo,
+                    Pais = APIContaBanco.Enums.Pais.Brasil
+                }
+            };
+
+            repository.Insert(cliente);
         }
     }
 }
